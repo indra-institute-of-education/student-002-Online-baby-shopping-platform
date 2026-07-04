@@ -161,16 +161,16 @@ No installation is required.
 ## 📸 Project Screenshots
 
 | Home | Products |
-|------|----------|
-| ![](screenshots/1.PNG) | ![](screenshots/5.PNG) |
+|:----:|:--------:|
+| <img src="screenshots/1.PNG" width="450"/> | <img src="screenshots/2.PNG" width="450"/> |
 
-| AdminLogin | UserLogin |
-|-----------|------|
-| ![](screenshots/4.PNG) | ![](screenshots/2.PNG) |
+| Admin Login | User Login |
+|:-----------:|:----------:|
+| <img src="screenshots/3.PNG" width="450"/> | <img src="screenshots/4.PNG" width="450"/> |
 
 | Admin Dashboard |
-|-----------|
-| ![](screenshots/3.PNG) |
+|:---------------:|
+| <img src="screenshots/5.PNG" width="900"/> |
 
 
 
