@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiny Twinkles - Your One-Stop Baby Shop</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Dropdown styles */
+        .dropdown-submenu {
+            position: relative;
+        }
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+        /* Prevent blue color on dropdown items */
+        .dropdown-submenu > .dropdown-item.active, 
+        .dropdown-submenu > .dropdown-item:active {
+            background-color: transparent !important;
+            color: inherit !important;
+        }
+        
+        /* Product card styles */
+        .product-card {
+            position: relative;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Product image slider */
+        .product-slider {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+        }
+        
+        .product-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .product-slide.active {
+            opacity: 1;
+        }
+        
+        .product-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        /* Wishlist heart styles - works for all categories */
+        .wishlist-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        .wishlist-icon.active,
+        .wishlist-icon.active:hover {
+            color: red !important;
+            transform: scale(1.1);
+        }
+        .wishlist-icon:hover {
+            color: #ff6b6b;
+        }
+        .wishlist-icon {
+            
+            pointer-events: auto;
+        }
+        
+        /* Size options modal */
+         .size-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .size-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <img src="images/Tiny_Twinkles__1_-removebg-preview.png" alt="lo" class="logo">
+            <a class="navbar-brand" href="#home" onclick="showPage('home')"><b>Tiny Twinkles</b></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home" onclick="showPage('home')"><b>Home</b></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                           <b>Shop</b> 
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#all-products" onclick="showPage('all-products')"><b>All Products</b></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            <!-- Boys' Collection with Subcategories -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="boysCollectionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.preventDefault()">
+                                    <b>Boys' Collection</b>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="boysCollectionDropdown">
+                                    <li><a class="dropdown-item" href="#boys-collection-onesies" onclick="showPage('boys-collection', 'onesies')">Onesies</a></li>
+                                    <li><a class="dropdown-item" href="#boys-collection-tshirts" onclick="showPage('boys-collection', 'tshirts')">T-Shirts</a></li>
+                                    <li><a class="dropdown-item" href="#boys-collection-jeans" onclick="showPage('boys-collection', 'jeans')">Jeans</a></li>
+                                    <li><a class="dropdown-item" href="#boys-collection-sleepwear" onclick="showPage('boys-collection', 'sleepwear')">Sleepwear</a></li>
+                                    <li><a class="dropdown-item" href="#boys-collection-formal" onclick="showPage('boys-collection', 'formal')">Formal Wear</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Girls' Collection with Subcategories -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="girlsCollectionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <b>Girls' Collection</b>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="girlsCollectionDropdown">
+                                    <li><a class="dropdown-item" href="#girls-collection-dresses" onclick="showPage('girls-collection', 'dresses')">Dresses</a></li>
+                                    <li><a class="dropdown-item" href="#girls-collection-tops" onclick="showPage('girls-collection', 'tops')">Tops</a></li>
+                                    <li><a class="dropdown-item" href="#girls-collection-skirts" onclick="showPage('girls-collection', 'skirts')">Skirts</a></li>
+                                    <li><a class="dropdown-item" href="#girls-collection-sets" onclick="showPage('girls-collection', 'sets')">Outfits & Sets</a></li>
+                                    <li><a class="dropdown-item" href="#girls-collection-swimwear" onclick="showPage('girls-collection', 'swimwear')">Swimwear</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Toys with Subcategories -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="toysDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <b>Toys</b>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="toysDropdown">
+                                    <li><a class="dropdown-item" href="#toys-plush" onclick="showPage('toys', 'plush')">Plush Toys</a></li>
+                                    <li><a class="dropdown-item" href="#toys-teething" onclick="showPage('toys', 'teething')">Teething Toys</a></li>
+                                    <li><a class="dropdown-item" href="#toys-educational" onclick="showPage('toys', 'educational')">Educational Toys</a></li>
+                                    <li><a class="dropdown-item" href="#toys-musical" onclick="showPage('toys', 'musical')">Musical Toys</a></li>
+                                    <li><a class="dropdown-item" href="#toys-outdoor" onclick="showPage('toys', 'outdoor')">Outdoor Toys</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Feeding & Nursing with Subcategories -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="feedingNursingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <b>Feeding & Nursing</b>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="feedingNursingDropdown">
+                                    <li><a class="dropdown-item" href="#feeding-nursing-bottles" onclick="showPage('feeding-nursing', 'bottles')">Bottles & Nipples</a></li>
+                                    <li><a class="dropdown-item" href="#feeding-nursing-bibs" onclick="showPage('feeding-nursing', 'bibs')">Bibs</a></li>
+                                    <li><a class="dropdown-item" href="#feeding-nursing-warmers" onclick="showPage('feeding-nursing', 'warmers')">Bottle Warmers</a></li>
+                                    <li><a class="dropdown-item" href="#feeding-nursing-pumps" onclick="showPage('feeding-nursing', 'pumps')">Breast Pumps</a></li>
+                                    <li><a class="dropdown-item" href="#feeding-nursing-solidfood" onclick="showPage('feeding-nursing', 'solidfood')">Solid Food Essentials</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Furniture with Subcategories -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="furnitureDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <b>Furniture</b>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="furnitureDropdown">
+                                    <li><a class="dropdown-item" href="#furniture-cribs" onclick="showPage('furniture', 'cribs')">Cribs & Bassinets</a></li>
+                                    <li><a class="dropdown-item" href="#furniture-changing" onclick="showPage('furniture', 'changing')">Changing Tables</a></li>
+                                   </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about" onclick="showPage('about')"><b>About</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact" onclick="showPage('contact')"><b>Contact</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wishlist" onclick="showPage('wishlist')">
+                            <i class="fas fa-heart"></i> <span class="d-none d-lg-inline"></span> <span class="badge bg-danger" id="wishlist-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cart" onclick="showPage('cart')">
+                            <i class="fas fa-shopping-cart"></i> <span class="d-none d-lg-inline"></span> <span class="badge bg-danger" id="cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="auth-nav-link">
+                        <!-- Auth button will be injected here by JS -->
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-danger fw-bold" href="admin.html" target="_blank">
+                          <i class="fas fa-user-shield"></i> Admin Login
+                        </a>
+                      </li>
+                      
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content: Pages will be swapped here -->
+    <main id="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page">
+            <!-- Hero Carousel -->
+            <section id="hero-carousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="images/wall1.jpg" class="d-block w-100" alt="Adorable baby outfits">
+                    <div class="carousel-caption d-none d-md-block">
+                      
+                        <a href="#all-products" class="btn btn-classic" onclick="showPage('all-products')">Shop Now</a>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="images/wall2.jpg" class="d-block w-100" alt="Fun and playful toys">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a href="#all-products" class="btn btn-classic" onclick="showPage('all-products')"><b>Shop Now</b></a>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="images/wall3.jpg" class="d-block w-100" alt="Cozy nursery furniture">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a href="#all-products" class="btn btn-classic" onclick="showPage('all-products')">Shop Now</a>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </section>
+            
+            <section class="container my-5">
+                <h2 class="section-title">Featured Products</h2>
+                <div class="row" id="featured-products"></div>
+            </section>
+        </div>
+
+        <!-- Product Pages -->
+        <div id="all-products" class="page" style="display:none;"></div>
+        <div id="boys-collection" class="page" style="display:none;"></div>
+        <div id="girls-collection" class="page" style="display:none;"></div>
+        <div id="toys" class="page" style="display:none;"></div>
+        <div id="feeding-nursing" class="page" style="display:none;"></div>
+        <div id="furniture" class="page" style="display:none;"></div>
+
+        <!-- About Page -->
+        
+
+        <div id="about" class="page" style="display:none;">
+            <div class="page-header">
+                <div class="container"><h1>About Tiny Twinkles</h1></div>
+            </div>
+            <div class="container my-5">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <div class="content-section">
+                            <h3 class="mb-4 text-center"><b>Our Vision</b></h3>
+                            <p><b>Founded with love and a passion for parenthood, Tiny Twinkles began as a small dream to make high-quality, safe, and beautiful baby products accessible to everyone. We believe that every baby deserves the best start in life, and every parent deserves peace of mind. Our journey is one of careful curation, ensuring that every item in our store is something we'd proudly use for our own families.</b></p>                            <h3 class="mt-5 mb-4 text-center">Our Mission</h3>
+                            
+                            <p><b>Our mission is to support parents by providing a trusted, one-stop shop for all their baby needs. We are committed to sourcing products that are not only stylish and functional but also ethically made and environmentally conscious. From the softest organic cotton clothing to the safest, most engaging toys, we hand-pick every product with care, so you can shop with confidence and joy.</b></p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-center border-radius=30">
+                      
+                        <img src="images/2_babies_with_shopping.jpeg"alt="Happy baby" class="jumping-image img-fluid">
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wishlist Page -->
+        <div id="wishlist" class="page" style="display:none;">
+            <div class="page-header">
+                <div class="container"><h1>Your Wishlist</h1></div>
+            </div>
+            <div class="container">
+                <div id="wishlist-items-container"></div>
+                <div id="empty-wishlist-message" class="text-center" style="display:none;">
+                    <p>Your wishlist is empty. Start adding your favorites!</p>
+                    <a href="#all-products" class="btn btn-classic" onclick="showPage('all-products')">Browse Products</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cart" class="page" style="display:none;">
+            <div class="page-header">
+                <div class="container"><h1>Your Shopping Cart</h1></div>
+            </div>
+            <div class="container">
+                <div id="cart-items-container"></div>
+                <div id="cart-summary" class="text-end mt-4">
+                    <h3>Total: <span id="cart-total">$0.00</span></h3>
+                    <button class="btn btn-classic mt-2" onclick="handleCheckout()">Proceed to Checkout</button>
+                </div>
+                 <div id="empty-cart-message" class="text-center" style="display:none;">
+                    <p>Your cart is empty.</p>
+                    <a href="#all-products" class="btn btn-classic" onclick="showPage('all-products')">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+        
+       <!-- Auth Page (Login/Register) -->
+       <div id="auth" class="page" style="display:none;">
+        <div class="container auth-page-container" id="auth-page-container">
+            <!-- Sign Up -->
+            <div class="form-container sign-up">
+                <form id="register-form" onsubmit="handleRegister(event)">
+                    <h1>Create Account</h1>
+                    <div class="social-icons">
+                        <a href="#" class="icon"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#" class="icon"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                    <span>or use your email for registration</span>
+                    <input type="text" id="register-name" placeholder="Name" required>
+                    <input type="email" id="register-email" placeholder="Email" required>
+                    <input type="password" id="register-password" placeholder="Password" required>
+                    <button type="submit" class="btn btn-classic">Sign Up</button>
+                </form>
+            </div>
+    
+            <!-- Sign In -->
+            <div class="form-container sign-in">
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <h1>Sign In</h1>
+                    <div class="social-icons">
+                        <a href="#" class="icon"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#" class="icon"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                    <span>or use your email password</span>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <a href="#">Forget Your Password?</a>
+                    <button type="submit" class="btn btn-classic">Sign In</button>
+                </form>
+            </div>
+    
+            <!-- Toggle Container -->
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <h1>Welcome Back!</h1>
+                        <p>Enter your personal details to use all of site features</p>
+                        <button class="btn btn-classic" id="login-toggle">Sign In</button>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Register with your personal details to use all of site features</p>
+                        <button class="btn btn-classic" id="register-toggle">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Checkout Page -->
+    <div id="checkout" class="page" style="display:none;">
+        <div class="page-header">
+            <div class="container"><h1>Checkout</h1></div>
+        </div>
+        <div class="container">
+            <div class="content-section">
+                <h3 class="text-center">Order Summary</h3>
+                <p id="checkout-user-greeting" class="text-center"></p>
+                <div id="checkout-items"></div>
+                <hr>
+                <h4 class="text-end">Total: <span id="checkout-total"></span></h4>
+                <div class="text-center mt-4">
+                    <button class="btn btn-classic" onclick="showConfirmationModal()">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Confirmation Page -->
+    <div id="order-confirmation" class="page" style="display:none;">
+        <div class="page-header">
+            <div class="container"><h1>Thank You For Your Order!</h1></div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="content-section text-center">
+                        <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                        <h3 id="confirmation-greeting"></h3>
+                        <p>🌟 “Keep supporting me like stars in the night, always shining even in the dark 🌌✨”<b id="confirmation-email"></b>.</p>
+                        <p>Your Order Number is: <b id="confirmation-order-number"></b></p>
+                        <hr>
+                        <h4>Order Summary</h4>
+                        <div id="confirmation-items" class="text-start"></div>
+                        <hr>
+                        <h4 class="text-end">Total: <b id="confirmation-total"></b></h4>
+                        <hr>
+                        <button class="btn btn-classic mt-3" onclick="showPage('home')">Continue Shopping</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page" style="display:none;">
+        <div class="page-header">
+            <div class="container"><h1><b>Contact Us</b></h1></div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="content-section">
+                         <p class="text-center mb-4"><b>Have a question? Fill out the form below and we'll get back to you as soon as possible.</b></p>
+                        <form>
+                            <div class="mb-3"><label for="name" class="form-label"><b>Name</b></label><input type="text" class="form-control" id="name"></div>
+                            <div class="mb-3"><label for="email" class="form-label"><b>Email</b></label><input type="email" class="form-control" id="email"></div>
+                            <div class="mb-3"><label for="message" class="form-label"><b>Message</b></label><textarea class="form-control" id="message" rows="5"></textarea></div>
+                            <div class="text-center"><button type="submit" class="btn btn-classic"><b>Send Message</b></button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Size Selection Modal -->
+<div id="size-modal" class="size-modal">
+    <div class="size-modal-content">
+        <div class="row">
+            <div class="col-md-6">
+                <img id="modal-product-image" src="" class="img-fluid" alt="Product image" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/90c7bf5c-63ae-45c5-8028-4f1140e1b276.png">
+            </div>
+            <div class="col-md-6">
+                <h4 id="modal-product-name"></h4>
+                <h5 id="modal-product-price" class="text-primary mb-3"></h5>
+                  <h6>Select Size:</h6>
+                <div class="size-options btn-group btn-group-toggle mb-3" data-toggle="buttons">
+                    <label class="btn btn-outline-light">
+                          <label class="btn btn-outline-primary">
+                        <input type="radio" name="size" value="10">0-6 months
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="size" value="10">6-12 months
+                    </label>
+                       
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="size" value="10">12-18 months
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="size" value="10">1-2 year
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="size" value="10">3-4 year
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="size" value="10">5-6 year
+                    </label>
+                </div>
+                
+                <button class="btn btn-primary w-100 mt-3" onclick="addToCartWithSize()">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                </button>
+                <button class="btn btn-outline-secondary w-100 mt-2" onclick="closeSizeModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+<!-- Message Modal -->
+<div id="message-modal" class="message-modal">
+    <div class="message-modal-content">
+        <h4 id="modal-title">Message</h4>
+        <p id="modal-message"></p>
+        <button class="btn btn-classic" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+
+<!-- Order Confirmation Modal -->
+<div id="order-confirm-modal" class="message-modal">
+    <div class="message-modal-content">
+        <h4>Confirm Your Order</h4>
+        <p>Are you sure you want to place this order?</p>
+        <button class="btn btn-classic" onclick="placeOrder()">Yes, Order</button>
+        <button class="btn btn-secondary" onclick="closeConfirmationModal()">Cancel</button>
+    </div>
+</div>
+
+<div id="order-processing-modal" class="message-modal">
+    <div class="message-modal-content" style="background-color: transparent; border: none; box-shadow: none;">
+        <div class="order-spinner"></div>
+        <h4 style="color: white; margin-top: 20px; text-shadow: 1px 1px 2px #333;">Processing Your Order...</h4>
+    </div>
+</div>
+
+<div class="modal fade" id="productDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="product-modal-title">Product Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6"><img id="product-modal-image" src="" class="img-fluid rounded"></div>
+                    <div class="col-md-6">
+                        <h3 id="product-modal-name"></h3>
+                        <p class="fs-4 fw-bold" id="product-modal-price"></p>
+                        <p id="product-modal-description">A short description of the product goes here, highlighting its key features and materials.</p>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Select Size:</label>
+                            <div id="product-modal-sizes" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+                        <input type="hidden" id="product-modal-id">
+                        <input type="hidden" id="product-modal-selected-size">
+                        <p id="size-error" class="text-danger d-none">Please select a size.</p>
+                        <button class="btn btn-classic w-100" onclick="addProductFromModalToCart()">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3"><h5>About Tiny Twinkles</h5><p>We are dedicated to providing the best quality products for your little ones, from clothing to toys and essentials.</p></div>
+            <div class="col-md-2 mb-3"><h5>Quick Links</h5><ul class="list-unstyled"><li><a href="#home" onclick="showPage('home')">Home</a></li><li><a href="#all-products" onclick="showPage('all-products')">Products</a></li><li><a href="#about" onclick="showPage('about')">About</a></li><li><a href="#contact" onclick="showPage('contact')">Contact</a></li></ul></div>
+            <div class="col-md-3 mb-3"><h5>Contact Info</h5><ul class="list-unstyled"><li><i class="fas fa-map-marker-alt"></i> No:3,Tiny twinkles, Trichy</li><li><i class="fas fa-phone"></i>82200 62942</li><li><i class="fas fa-envelope"></i> tinytwin@gmail.com</li></ul></div>
+            <div class="col-md-3 mb-3"><h5>Follow Us</h5><div class="social-icons"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-pinterest"></i></a></div></div>
+        </div>
+        <hr class="text-secondary">
+        <div class="text-center pt-3"><p>&copy; 2025 Tiny Twinkles. All Rights Reserved.</p></div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
