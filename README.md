@@ -162,15 +162,15 @@ No installation is required.
 
 | Home | Products |
 |------|----------|
-| ![](screenshots/1.png) | ![](screenshots/5.png) |
+| ![](screenshots/1.PNG) | ![](screenshots/5.PNG) |
 
 | AdminLogin | UserLogin |
 |-----------|------|
-| ![](screenshots/4.png) | ![](screenshots/2.png) |
+| ![](screenshots/4.PNG) | ![](screenshots/2.PNG) |
 
 | Admin Dashboard |
 |-----------|
-| ![](screenshots/3.png) |
+| ![](screenshots/3.PNG) |
 
 
 
