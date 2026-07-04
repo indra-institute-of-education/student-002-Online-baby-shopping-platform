@@ -158,23 +158,19 @@ No installation is required.
 
 ---
 
-## 📷 Screenshots
+## 📸 Project Screenshots
 
-Add screenshots here.
+| Home | Products |
+|------|----------|
+| ![](screenshots/1.png) | ![](screenshots/5.png) |
 
-```
-Home Page
+| AdminLogin | UserLogin |
+|-----------|------|
+| ![](screenshots/4.png) | ![](screenshots/2.png) |
 
-Products
-
-Shopping Cart
-
-Wishlist
-
-Checkout
-
-Admin Login
-```
+| Admin Dashboard |
+|-----------|
+| ![](screenshots/3.png) |
 
 
 
